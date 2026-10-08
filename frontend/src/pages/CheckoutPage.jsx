@@ -43,19 +43,91 @@ export default function CheckoutPage() {
     </section>
   );
 
-  if (cart.length === 0) return <section><div className="empty-state"><h1>Your cart is empty</h1><Link className="button" to="/">Browse products</Link></div></section>;
+  if (cart.length === 0) return (
+    <section>
+      <div className="empty-state">
+        <h1>Your cart is empty</h1>
+        <Link className="button" to="/">Browse products</Link>
+      </div>
+    </section>
+  );
 
   return (
     <section className="checkout-layout">
       <form onSubmit={submitOrder}>
-        <p className="eyebrow">SIMULATED CHECKOUT</p><h1>Delivery information</h1>
+        <p className="eyebrow">SIMULATED CHECKOUT</p>
+        <h1>Delivery information</h1>
         <StatusMessage type="error">{error}</StatusMessage>
-        <label>Full name<input name="customerName" value={form.customerName} onChange={updateField} minLength="2" maxLength="80" required /></label>
-        <label>Email address<input name="email" type="email" value={form.email} onChange={updateField} required /></label>
-        <label>Delivery address<textarea name="address" value={form.address} onChange={updateField} minLength="10" maxLength="300" required /></label>
-        <button disabled={submitting}>{submitting ? 'Submitting order…' : 'Place simulated order'}</button>
+        <label>
+          Full name
+          <input
+            name="customerName"
+            value={form.customerName}
+            onChange={updateField}
+            minLength="2"
+            maxLength="80"
+            required
+          />
+        </label>
+        <label>
+          Email address
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={updateField}
+            required
+          />
+        </label>
+        <label>
+          Delivery address
+          <textarea
+            name="address"
+            value={form.address}
+            onChange={updateField}
+            minLength="10"
+            maxLength="300"
+            required
+          />
+        </label>
+        <button disabled={submitting}>
+          {submitting ? 'Submitting order…' : 'Place simulated order'}
+        </button>
       </form>
-      <aside className="summary"><h2>Amount due</h2><p className="summary-total"><span>Total</span><strong>₱{total.toLocaleString('en-PH')}</strong></p><small>No actual payment will be collected.</small></aside>
+
+      <aside className="summary">
+        <h2>Order review</h2>
+        <div className="checkout-items" style={{ marginBottom: '16px' }}>
+          {cart.map((item) => (
+            <div
+              key={item.productId}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: '8px 0',
+                borderBottom: '1px solid #e2e8f0',
+                fontSize: '0.95rem'
+              }}
+            >
+              <div>
+                <strong>{item.name}</strong>
+                <div style={{ color: '#64748b', fontSize: '0.85rem' }}>
+                  ₱{item.price.toLocaleString('en-PH')} × {item.quantity}
+                </div>
+              </div>
+              <strong style={{ alignSelf: 'center' }}>
+                ₱{(item.price * item.quantity).toLocaleString('en-PH')}
+              </strong>
+            </div>
+          ))}
+        </div>
+
+        <p className="summary-total">
+          <span>Total</span>
+          <strong>₱{total.toLocaleString('en-PH')}</strong>
+        </p>
+        <small>No actual payment will be collected.</small>
+      </aside>
     </section>
   );
 }
